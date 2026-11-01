@@ -33,7 +33,7 @@ Get-ChildItem $stage -Recurse -File | Where-Object { $_.Extension -in '.exe', '.
 }
 Copy-Item "$PSScriptRoot/preflight.py", "$PSScriptRoot/static_scan.py" "$stage/diagnostics"
 Copy-Item "$PSScriptRoot/reports" "$stage/diagnostics" -Recurse
-Copy-Item "$PSScriptRoot/CROSSOVER.md", "$PSScriptRoot/STATUS.md" $stage
+Copy-Item "$PSScriptRoot/WINDOWS.md", "$PSScriptRoot/CROSSOVER.md", "$PSScriptRoot/STATUS.md" $stage
 $manifest = [ordered]@{
     mod_commit = (git rev-parse HEAD)
     launcher_commit = (git -C _launcher rev-parse HEAD)

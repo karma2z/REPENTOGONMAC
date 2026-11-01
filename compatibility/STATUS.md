@@ -50,3 +50,11 @@ A direct byte-pattern cross-check of representative missing and matching signatu
 The implementation branch was pushed to `karma2z/REPENTOGONMAC` as `compatibility/j460-audit`. Push-triggered CI is configured, but Actions API requests remain Forbidden, so no Windows job status, compilation result, downloadable binary artifact or PR creation is confirmed.
 
 No game files are included. No runtime compatibility is confirmed. A completed hook port remains blocked on executable evidence; Windows compilation results remain pending CI access/execution.
+
+## Follow-up Windows-only investigation
+
+The user clarified that Windows compatibility is the target; CrossOver is not a prerequisite for this port. See `WINDOWS.md` for the current focused status. Three plausible upstream branches were inspected (`definition-fixes`, `1.1.0`, `project-babylon`); none declared J460 support in its README. The first two target J835, and the third still targets J273.
+
+Added a native main-hook instruction-window validator before memory patching. It accepts only complete, prefix-free immediate-push instructions spanning the seven displaced bytes and checks `mov ebp, esp`. It also fixes a missing argument in the existing `%p` startup log. The C++ test project passed local CMake build/CTest and standalone sanitizer checks, and the uploaded J460 main window was accepted. This is one measured startup assumption, not a J460 hook port. J273 runtime regression testing remains outstanding.
+
+Launcher patch metadata identifies J460 as input but expects hash `3bdfc8bae0dc7e334b76009d0ad45dfbb16ee5f00c06ffbc3a0094e34d44616b`, not the uploaded executable's hash. No downpatch was forced or applied.

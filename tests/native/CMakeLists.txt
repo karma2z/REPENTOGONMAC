@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.13)
+project(MainHookValidationTests LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+enable_testing()
+add_executable(main_hook_validation main_hook_validation.cpp)
+target_include_directories(main_hook_validation PRIVATE ../../libzhl)
+add_test(NAME main_hook_instruction_window COMMAND main_hook_validation)

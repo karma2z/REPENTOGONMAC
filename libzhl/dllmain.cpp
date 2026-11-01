@@ -10,6 +10,7 @@
 #include "HookSystem_private.h"
 #include "IsaacRepentance.h"
 #include "Log.h"
+#include "MainHookValidation.h"
 #include "SigScan.h"
 
 #include <fstream>
@@ -43,8 +44,13 @@ bool HookMain(void** poisonPtr, char* poisonValue) {
 		ZHL::Log("[CRITICAL][HookMain] main has no resolved address; refusing to patch\n");
 		return false;
 	}
+	if (!ValidateMainHookWindow(static_cast<const unsigned char*>(addr), 10)) {
+		ZHL::Log("[CRITICAL][HookMain] Unexpected instruction window at %p; refusing to patch\n", addr);
+		return false;
+	}
+	ZHL::Log("[INFO][HookMain] Seven-byte SEH instruction window validated at %p\n", addr);
 	{
-		ZHL::Log("[INFO][HookMain] Flat patching main at %p to heal a single byte\n");
+		ZHL::Log("[INFO][HookMain] Flat patching main at %p to heal a single byte\n", addr);
 		ASMPatch patch;
 		patch.AddBytes("\x55"); // push ebp, this restores the poison byte
 		sASMPatcher.FlatPatch(addr, &patch);
