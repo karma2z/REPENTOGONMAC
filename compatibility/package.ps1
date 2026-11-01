@@ -31,7 +31,8 @@ Get-ChildItem $stage -Recurse -File | Where-Object { $_.Extension -in '.exe', '.
     $pe = [BitConverter]::ToInt32($bytes, 60)
     if ($pe -lt 64 -or $pe + 26 -gt $bytes.Length -or [BitConverter]::ToUInt32($bytes, $pe) -ne 0x4550 -or [BitConverter]::ToUInt16($bytes, $pe + 4) -ne 0x14c -or [BitConverter]::ToUInt16($bytes, $pe + 24) -ne 0x10b) { throw "Expected PE32/i386 output: $_" }
 }
-Copy-Item "$PSScriptRoot/preflight.py" "$stage/diagnostics"
+Copy-Item "$PSScriptRoot/preflight.py", "$PSScriptRoot/static_scan.py" "$stage/diagnostics"
+Copy-Item "$PSScriptRoot/reports" "$stage/diagnostics" -Recurse
 Copy-Item "$PSScriptRoot/CROSSOVER.md", "$PSScriptRoot/STATUS.md" $stage
 $manifest = [ordered]@{
     mod_commit = (git rev-parse HEAD)

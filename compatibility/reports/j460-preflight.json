@@ -1,0 +1,63 @@
+{
+  "machine": "i386",
+  "format": "PE32",
+  "entry_rva": 7273542,
+  "image_base": 4194304,
+  "timestamp": 1776739239,
+  "sections": [
+    {
+      "name": ".text",
+      "rva": 4096,
+      "virtual_size": 7430452,
+      "raw_size": 7430656,
+      "raw_offset": 1024,
+      "executable": true,
+      "sha256": "79f75061eaf803cb67f5ca037c5236016506622550626af7be040b0e3f98f106"
+    },
+    {
+      "name": ".rdata",
+      "rva": 7438336,
+      "virtual_size": 915784,
+      "raw_size": 915968,
+      "raw_offset": 7431680,
+      "executable": false,
+      "sha256": "d073f542e476c24d42ba2cee67a44b5ec56e650aefee3edca72509cd0681a3e6"
+    },
+    {
+      "name": ".dataa",
+      "rva": 8355840,
+      "virtual_size": 674468,
+      "raw_size": 433664,
+      "raw_offset": 8347648,
+      "executable": false,
+      "sha256": "bb7c0d2bb43fb3b10aaf37f5ad994ae42b15944785704f4e6ff962aab9e3faa8"
+    },
+    {
+      "name": ".rsrca",
+      "rva": 9031680,
+      "virtual_size": 15136,
+      "raw_size": 15360,
+      "raw_offset": 8781312,
+      "executable": false,
+      "sha256": "5cc85cc63bd87b9208c287180dd8d1b9b2798ac46214b97e6ab8ecd389207e01"
+    },
+    {
+      "name": ".reloc",
+      "rva": 9048064,
+      "virtual_size": 379196,
+      "raw_size": 379392,
+      "raw_offset": 8796672,
+      "executable": false,
+      "sha256": "ef8ea5ca7695403957043292a59e3898bb27e275700287c3d02f5d7686ea5022"
+    }
+  ],
+  "size": 9176064,
+  "sha256": "b3c7fdbfce664d2600f1403f290c2a8d0df7a544d1a529295ff664173fd98469",
+  "version_strings": [
+    "1.9.7.17.J460"
+  ],
+  "matches_requested_identity": true,
+  "runtime_compatibility": "UNVERIFIED",
+  "safe_to_install": false,
+  "reason": "Identity and section hashes are diagnostic evidence only; hooks, ABI, layouts and CrossOver runtime remain unvalidated."
+}
