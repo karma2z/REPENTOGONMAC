@@ -26,18 +26,23 @@ void __stdcall SanityCheckInitZHL() {
 /* Because ZHL is not initialized inside libzhl, we cannot use HOOK_GLOBAL here,
  * because the static constructor would be invoked before ZHL is ready.
  */
-void HookMain(void** poisonPtr, char* poisonValue) {
+bool HookMain(void** poisonPtr, char* poisonValue) {
 	FunctionDefinition* definition = FunctionDefinition::Find("IsaacMain", typeid(int (*)(int, char**)));
 	if (!definition) {
 		ZHL::Log("[CRITICAL][HookMain] main was not found in the executable\n");
-		return;
+		return false;
 	}
 
 	if (!loaderFinish) {
 		ZHL::Log("[CRITICAL][HookMain] No termination hook given\n");
+		return false;
 	}
 
 	void* addr = definition->GetAddress();
+	if (!addr) {
+		ZHL::Log("[CRITICAL][HookMain] main has no resolved address; refusing to patch\n");
+		return false;
+	}
 	{
 		ZHL::Log("[INFO][HookMain] Flat patching main at %p to heal a single byte\n");
 		ASMPatch patch;
@@ -87,6 +92,7 @@ void HookMain(void** poisonPtr, char* poisonValue) {
 
 	ZHL::Log("[INFO][HookMain] Dumping 32 bytes of ASM for log sanity: ");
 	ZHL::DumpMemory(addr, 0x20, false, true);
+	return true;
 }
 
 extern "C" {
@@ -105,6 +111,10 @@ extern "C" {
 			ExitProcess(1);
 		}
 #endif
+		if (!loaderFinishPtr || !poisonPtr || !poisonValue) {
+			ZHL::Log("[CRITICAL][InitZHL] Invalid loader callback or output pointers; refusing to patch\n");
+			return 1;
+		}
 		InitializeSymbolHandler();
 		bool clearLog = false;
 		if (!FunctionDefinition::Init())
@@ -149,17 +159,18 @@ extern "C" {
 					"If you are an end-user facing this issue, you might be using an unsupported version of the game.",
 					"Error", MB_ICONERROR);
 			}
+			ZHL::Log("[CRITICAL][InitZHL] %zu ASM definitions unresolved; refusing to patch\n", misses.size());
+			return 1;
 		}
 
+		ZHL::Log("[INFO][InitZHL] Registered function and ASM scans completed; this does not validate executable compatibility\n");
 		FunctionDefinition::UpdateHooksStateFromJSON("hooks.json");
 		ASMPatch::_Init();
 		ASMPatch::SavedRegisters::_Init();
 
 		loaderFinish = loaderFinishPtr;
 
-		HookMain(poisonPtr, poisonValue);
-
-		return 0;
+		return HookMain(poisonPtr, poisonValue) ? 0 : 1;
 	}
 
 	__declspec(dllexport) int OfflineScan(void*) {
